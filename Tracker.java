@@ -50,8 +50,8 @@ class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction [type=" + type + ", amount=" + amount + ", category=" + category + ", description="
-                + description + ", date=" + date + "]";
+        return  type + ","+ amount + "," + category + ","
+                + description + "," + date ;
     }
 
 }
@@ -86,11 +86,14 @@ public class Tracker {
                     loadFromFile(fileName);
                     break;
 
-                case 5: {
+                case 5: 
                     saveToFile(fileName);
                     System.out.println("Data saved. Exiting...");
+                    break;
+                case 6:
+                    System.out.println("Exit");
                     return;
-                }
+                
                 default:
                     System.out.println("Invalid choice.");
             }
@@ -99,7 +102,7 @@ public class Tracker {
     }
 
     public static void saveToFile(String filename) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename,true))) {
             for (Transaction t : transactions) {
                 writer.println(t);
             }
@@ -113,7 +116,8 @@ public class Tracker {
         double amount = sc.nextDouble();
         sc.nextLine();
 
-        System.out.print("Enter category income = Salary/Business , expense = Food/Rent/Travel");
+        System.out.print("Enter category like income = Salary/Business , expense = Food/Rent/Travel");
+        System.out.println("Enter category : ");
         String category = sc.nextLine();
 
         System.out.print("Enter description: ");
@@ -128,6 +132,7 @@ public class Tracker {
 
     private static void MonthlySummary() {
         transactions.clear();
+        loadFromFile(fileName);
         System.out.print("Enter month and year (yyyy-MM): ");
         String input = sc.nextLine();
         YearMonth selectedMonth = YearMonth.parse(input);
@@ -150,7 +155,7 @@ public class Tracker {
     }
 
     public static void display() {
-        System.out.println( "Choose an option: \n1. Add Income \n2. Add Expense \n3. View Monthly Summary \n4. Load Transactions from file \n5. Save and Exit \nEnter Your choice");
+        System.out.println( "Choose an option: \n1. Add Income \n2. Add Expense \n3. View Monthly Summary \n4. Load Transactions from file \n5. Save \n6. Exit \nEnter Your choice");
     }
 
     public static void loadFromFile(String filename) {
