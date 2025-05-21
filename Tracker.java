@@ -109,6 +109,7 @@ public class Tracker {
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
         }
+        transactions.clear();
     }
 
     public static void addTransaction(Transaction.Type type) {
