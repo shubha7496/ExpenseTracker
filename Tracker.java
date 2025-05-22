@@ -143,7 +143,7 @@ public class Tracker {
         System.out.println("Transaction added.");
     }
 
-    private static void MonthlySummary() {
+    public static void MonthlySummary() {
         System.out.print("Enter month and year (yyyy-MM): ");
         String input = sc.nextLine();
         YearMonth selectedMonth = YearMonth.parse(input);
