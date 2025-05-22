@@ -197,5 +197,4 @@ public class Tracker {
 
         System.out.println("Loaded transactions count: " + loadedtransactions.size() + " from  " + fileName);
     }
-
 }
