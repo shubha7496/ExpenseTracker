@@ -14,11 +14,11 @@ class Transaction {
         INCOME, EXPENSE
     }
 
-  private  Type type;
-  private   double amount;
-  private  String category;
-  private  String description;
-   private LocalDate date;
+    private Type type;
+    private double amount;
+    private String category;
+    private String description;
+    private LocalDate date;
 
     public Type getType() {
         return type;
@@ -121,7 +121,7 @@ public class Tracker {
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
         }
-newtransactions.clear();
+        newtransactions.clear();
     }
 
     public static void addTransaction(Transaction.Type type) {
