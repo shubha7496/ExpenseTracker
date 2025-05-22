@@ -1,4 +1,8 @@
 INCOME,3000.0,salary,my salary,2025-05-20
 EXPENSE,200.0,food,pizza,2025-05-21
-INCOME,5000.0,Business,sale mobile,2025-05-21
-EXPENSE,100.0,Travel,petrol,2025-05-20
+INCOME,5000.0,sal,sal,2024-05-22
+EXPENSE,100.0,food,tea,2024-05-21
+INCOME,1000.0,sal,my sal,2023-05-05
+EXPENSE,50.0,food,chai,2022-05-03
+INCOME,1200.0,sal,my sal,2022-04-02
+EXPENSE,50.0,food,pizza,2022-04-02

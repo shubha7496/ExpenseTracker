@@ -14,11 +14,11 @@ class Transaction {
         INCOME, EXPENSE
     }
 
-    Type type;
-    double amount;
-    String category;
-    String description;
-    LocalDate date;
+  private  Type type;
+  private   double amount;
+  private  String category;
+  private  String description;
+   private LocalDate date;
 
     public Type getType() {
         return type;
@@ -50,14 +50,16 @@ class Transaction {
 
     @Override
     public String toString() {
-        return  type + ","+ amount + "," + category + ","
-                + description + "," + date ;
+        return type + "," + amount + "," + category + ","
+                + description + "," + date;
     }
 
 }
 
 public class Tracker {
-    private static List<Transaction> transactions = new ArrayList<>();
+    private static List<Transaction> loadedtransactions = new ArrayList<>();
+    private static List<Transaction> newtransactions = new ArrayList<>();
+
     private static Scanner sc = new Scanner(System.in);
     private static String fileName;
 
@@ -86,14 +88,13 @@ public class Tracker {
                     loadFromFile(fileName);
                     break;
 
-                case 5: 
+                case 5:
                     saveToFile(fileName);
-                    System.out.println("Data saved. Exiting...");
                     break;
                 case 6:
                     System.out.println("Exit");
                     return;
-                
+
                 default:
                     System.out.println("Invalid choice.");
             }
@@ -101,15 +102,26 @@ public class Tracker {
 
     }
 
+    public static List<Transaction> getAllTransactions() {
+        List<Transaction> all = new ArrayList<>(loadedtransactions);
+        all.addAll(newtransactions);
+        return all;
+    }
+
     public static void saveToFile(String filename) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename,true))) {
-            for (Transaction t : transactions) {
+        if (newtransactions.isEmpty()) {
+            System.out.println("No new transactions to save.");
+            return;
+        }
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            for (Transaction t : newtransactions) {
                 writer.println(t);
             }
+            System.out.println("Data saved. Exiting...");
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
         }
-        transactions.clear();
+newtransactions.clear();
     }
 
     public static void addTransaction(Transaction.Type type) {
@@ -127,13 +139,11 @@ public class Tracker {
         System.out.print("Enter date (yyyy-MM-dd): ");
         String dateInput = sc.nextLine();
         LocalDate date = LocalDate.parse(dateInput);
-        transactions.add(new Transaction(type, amount, category, description, date));
+        newtransactions.add(new Transaction(type, amount, category, description, date));
         System.out.println("Transaction added.");
     }
 
     private static void MonthlySummary() {
-        transactions.clear();
-        loadFromFile(fileName);
         System.out.print("Enter month and year (yyyy-MM): ");
         String input = sc.nextLine();
         YearMonth selectedMonth = YearMonth.parse(input);
@@ -141,7 +151,7 @@ public class Tracker {
         double incomeTotal = 0, expenseTotal = 0;
 
         System.out.println("\n--- Monthly Summary for " + selectedMonth + " ---");
-        for (Transaction t : transactions) {
+        for (Transaction t : getAllTransactions()) {
             if (YearMonth.from(t.getDate()).equals(selectedMonth)) {
                 if (t.getType() == Transaction.Type.INCOME)
                     incomeTotal += t.getAmount();
@@ -153,13 +163,17 @@ public class Tracker {
         System.out.println("Total Income: " + incomeTotal);
         System.out.println("Total Expenses: " + expenseTotal);
         System.out.println("Net Savings: " + (incomeTotal - expenseTotal));
+        incomeTotal = 0;
+        expenseTotal = 0;
     }
 
     public static void display() {
-        System.out.println( "Choose an option: \n1. Add Income \n2. Add Expense \n3. View Monthly Summary \n4. Load Transactions from file \n5. Save \n6. Exit \nEnter Your choice");
+        System.out.println(
+                "Choose an option: \n1. Add Income \n2. Add Expense \n3. View Monthly Summary \n4. Load Transactions from file \n5. Save \n6. Exit \nEnter Your choice");
     }
 
     public static void loadFromFile(String filename) {
+        loadedtransactions.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -172,7 +186,7 @@ public class Tracker {
                     String description = parts[3].trim();
                     LocalDate date = LocalDate.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-                    transactions.add(new Transaction(transactionType, amount, category, description, date));
+                    loadedtransactions.add(new Transaction(transactionType, amount, category, description, date));
                 } catch (IllegalArgumentException e) {
                     System.err.println("Skipping invalid transaction data due to parsing error: " + line);
                 }
@@ -181,8 +195,7 @@ public class Tracker {
             System.err.println("Error reading file: " + e.getMessage());
         }
 
-        System.out.println("Loaded transactions count: " + transactions.size() + " from  " + fileName);
-
+        System.out.println("Loaded transactions count: " + loadedtransactions.size() + " from  " + fileName);
     }
 
 }
